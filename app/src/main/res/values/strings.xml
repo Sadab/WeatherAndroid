@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Weather</string>
+    <string name="textfield_label">Hey</string>
+    <string name="hint_text">Hint</string>
+    <string name="button_label_disabled">Disabled</string>
+    <string name="unelevated_button_label_enabled">Enabled</string>
+    <string name="button_label_enabled">Enabled</string>
+    <string name="demo_card_text">Demo text</string>
+    <string name="action_favorite">Favourite</string>
+    <string name="action_settings">Search</string>
+    <string name="search">search</string>
+    <string name="nav_item1">Mail Me</string>
+    <string name="nav_item2">Bookmark</string>
+</resources>
