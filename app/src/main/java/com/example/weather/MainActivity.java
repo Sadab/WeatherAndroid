@@ -5,6 +5,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
@@ -15,6 +16,9 @@ public class MainActivity extends AppCompatActivity {
 
     private CoordinatorLayout coordinatorLayout;
     int dark;
+    final String baseUrl = "http://api.openweathermap.org/data/2.5/weather?q=";
+    String location = "Dhaka,bd";
+    private static final String key = BuildConfig.ApiKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,5 +45,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Log.d("Url: ", urlSet());
+    }
+
+    private String urlSet(){
+        return (baseUrl+location+"&APPID="+key+"&units=metric");
     }
 }
