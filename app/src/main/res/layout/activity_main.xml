@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity"
-    android:id="@+id/layout">
+    android:id="@+id/layout"
+    android:orientation="vertical">
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:layout_width="match_parent"
@@ -23,6 +24,50 @@
         android:src="@drawable/ic_add_location_white_24dp"
         app:layout_anchor="@id/app_bar"
         android:id="@+id/fab"/>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#fff"
+            android:elevation="4dp"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/cardViewImg"
+                android:layout_width="64dp"
+                android:layout_height="68dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="18dp"
+                android:src="@drawable/ic_person_black_24dp" />
+            <TextView
+                android:id="@+id/cardview_list_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/cardViewImg"
+                android:paddingBottom="5dp"
+                android:text="Dhaka"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/short_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cardview_list_title"
+                android:layout_toRightOf="@+id/cardViewImg"
+                android:text="Icons and Weather txt"
+                android:textColor="#8b8b8b" />
+
+
+        </RelativeLayout>
+
+
+    </com.google.android.material.card.MaterialCardView>
 
 
 
