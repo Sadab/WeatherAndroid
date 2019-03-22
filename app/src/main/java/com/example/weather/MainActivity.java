@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 
 import com.google.gson.JsonObject;
+import com.squareup.picasso.Picasso;
 
 import static com.example.weather.R.drawable.ic_favorite_black_24dp;
 
@@ -26,7 +27,9 @@ public class MainActivity extends AppCompatActivity {
     private CoordinatorLayout coordinatorLayout;
     int dark;
     final String baseUrl = "http://api.openweathermap.org/";
+    final String baseImageUrl = "http://openweathermap.org/img/w/";
     String location = "Dhaka,bd";
+    String iconName = " ";
     private static final String key = BuildConfig.ApiKey; //Your api key here
     private TextView weatherData, locationTxt;
     private ImageView imageView;
@@ -59,39 +62,73 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Log.d("Url: ", urlSet());
         locationTxt.setText(location);
+        getMainModel();
+        getWeatherModel();
 
+    }
+
+    private void getMainModel(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         WeatherInterface weatherInterface = retrofit.create(WeatherInterface.class);
-        Call<WeatherModel> call = weatherInterface.getData(location, key, "metric");
-        call.enqueue(new Callback<WeatherModel>() {
+        Call<MainModel> call = weatherInterface.getMainModelData(location, key, "metric");
+        call.enqueue(new Callback<MainModel>() {
             @Override
-            public void onResponse(Call<WeatherModel> call, Response<WeatherModel> response) {
+            public void onResponse(Call<MainModel> call, Response<MainModel> response) {
                 if(!response.isSuccessful()){
                     weatherData.setText("Code" + response.code());
                     return;
                 }
-                WeatherModel object = response.body();
+                MainModel object = response.body();
 
                 weatherData.setText(object.getMain().get("temp").toString().concat("°C"));
 
                 //data.setText(object.getMain().toString());
 
-                Log.d("HI", object.getMain().toString());
+                Log.d("Main", object.getMain().toString());
             }
 
             @Override
-            public void onFailure(Call<WeatherModel> call, Throwable t) {
-                Log.d("Failed", t.getMessage());
+            public void onFailure(Call<MainModel> call, Throwable t) {
+                Log.d("Failed: ", t.getMessage());
             }
         });
     }
 
-    /*private String urlSet(){
-        return (baseUrl+location+"&APPID="+key+"&units=metric");
-    }*/
+    private void getWeatherModel(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        WeatherInterface weatherInterface = retrofit.create(WeatherInterface.class);
+        Call<WeatherModel> call = weatherInterface.getWeatherModelData(location, key, "metric");
+        call.enqueue(new Callback<WeatherModel>() {
+            @Override
+            public void onResponse(Call<WeatherModel> call, Response<WeatherModel> response) {
+                if(!response.isSuccessful()){
+                    locationTxt.setText("Code" + response.code());
+                    return;
+                }
+
+                WeatherModel weatherModel = response.body();
+
+                iconName = weatherModel.getWeather().get(0).getAsJsonObject().get("icon").toString().replaceAll("\"","");
+                Log.d("Weather icon", iconName);
+                Picasso.get().load(baseImageUrl+iconName.trim()+".png").into(imageView);
+
+
+            }
+
+            @Override
+            public void onFailure(Call<WeatherModel> call, Throwable t) {
+                Log.d("Failed: ", t.getMessage());
+            }
+        });
+
+
+
+    }
 }

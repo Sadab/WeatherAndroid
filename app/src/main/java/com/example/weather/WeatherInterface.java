@@ -11,8 +11,14 @@ import retrofit2.http.Query;
 public interface WeatherInterface {
 
     @GET("data/2.5/weather")
-    Call<WeatherModel> getData(@Query("q") String q,
+    Call<MainModel> getMainModelData(@Query("q") String q,
                                @Query("appid") String app,
                                @Query("units") String unit);
+
+    @GET("data/2.5/weather")
+    Call<WeatherModel> getWeatherModelData(@Query("q") String q,
+                                           @Query("appid") String app,
+                                           @Query("units") String unit);
+
 
 }

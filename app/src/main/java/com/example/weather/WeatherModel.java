@@ -1,21 +1,13 @@
 package com.example.weather;
 
-import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
 
 public class WeatherModel {
-    private int temp;
-    private JsonObject main;
-    public MainModel mainModel;
+    private JsonArray weather;
 
-    public int getTemp() {
-        return temp;
+    public JsonArray getWeather() {
+        //return  weather.get(0).getAsJsonObject().get("icon").toString();
+        return weather;
     }
 
-    public JsonObject getMain() {
-        return main;
-    }
-
-    public MainModel getMainModel() {
-        return mainModel;
-    }
 }
