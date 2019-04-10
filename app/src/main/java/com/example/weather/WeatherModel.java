@@ -2,6 +2,8 @@ package com.example.weather;
 
 import com.google.gson.JsonArray;
 
+import androidx.annotation.NonNull;
+
 public class WeatherModel {
     private JsonArray weather;
 

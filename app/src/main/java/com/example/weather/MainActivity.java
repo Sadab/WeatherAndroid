@@ -1,5 +1,6 @@
 package com.example.weather;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import retrofit2.Call;
@@ -7,6 +8,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import android.Manifest;
+import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +22,14 @@ import android.widget.Toast;
 
 
 import com.google.gson.JsonObject;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.DexterError;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.PermissionRequestErrorListener;
+import com.karumi.dexter.listener.single.PermissionListener;
 import com.squareup.picasso.Picasso;
 
 import static com.example.weather.R.drawable.ic_favorite_black_24dp;
@@ -33,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String key = BuildConfig.ApiKey; //Your api key here
     private TextView weatherData, locationTxt;
     private ImageView imageView;
+    Location loc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         imageView = findViewById(R.id.weatherImg);
         coordinatorLayout = findViewById(R.id.layout);
         dark = Color.parseColor("#263238");
+        loc = new Location();
 
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,9 +76,37 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Dexter.withActivity(this)
+                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+                        loc.buildLocationRequest();
+                        loc.buildLocationCallback();
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+                        Toast.makeText(MainActivity.this, "Not permitted", Toast.LENGTH_LONG).show();
+
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+
+                    }
+                }).withErrorListener(new PermissionRequestErrorListener() {
+                    @Override
+                    public void onError(DexterError error) {
+                        Toast.makeText(getApplicationContext(), "Error occurred! " + error.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }).check();
+
         locationTxt.setText(location);
         getMainModel();
         getWeatherModel();
+        loc.buildLocationRequest();
+        loc.buildLocationCallback();
 
     }
 
@@ -77,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         Call<MainModel> call = weatherInterface.getMainModelData(location, key, "metric");
         call.enqueue(new Callback<MainModel>() {
             @Override
-            public void onResponse(Call<MainModel> call, Response<MainModel> response) {
+            public void onResponse(@NonNull Call<MainModel>  call, @NonNull Response<MainModel> response) {
                 if(!response.isSuccessful()){
                     weatherData.setText("Code" + response.code());
                     return;
